@@ -12,6 +12,7 @@ Dispatcher mDispatcher;
 调用对象的detect方法，得到8个点，3个角度和脸部宽度。
 
 2. Dispatcher.cpp:
+
 持有对象mLandmaker，这个对象是8点模型。
 持有对象mDcnc，这个对象是5点模型。
 
@@ -31,6 +32,10 @@ OneLevel_obj.Classify(croppedImg, Pts);
 ```
 返回的点是归一化后的数值，在0-1之间。
 按照原论文裁取小的图像分别给level2的16个模型。每个点2个模型，算平均。
+
+4. CaffeClassify.cpp:
+
+使用的caffe官方c++调用库，可以不用管。
 
 ## 依赖
 
