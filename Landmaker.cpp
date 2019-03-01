@@ -290,6 +290,81 @@ FR_FaceInfo Landmaker::Detect(const cv::Mat& image, cv::Rect bbox, std::vector<f
     return faces;
 }
 
+FR_FaceInfo Landmaker::DetectOneLayer(const cv::Mat& image, cv::Rect bbox, std::vector<float> &features){
+    
+    features.clear();
+    FR_FaceInfo faces;
+    cv::Mat img, croppedImg;
+    this->faceBox = bbox;
+    
+    img = image;
+    croppedImg = GenerateRoi(img);
+    //std::cout << "after GenerateBoundingBox." << std::endl;
+    cv::imwrite("/Users/betty/Documents/betty/examples/duanhai.jpg", croppedImg);
+    
+    std::vector<float> Pts;
+    this->OneLevel_obj.Classify(croppedImg, Pts);
+    
+    // point LE1
+    point2f LE1_Avg;
+    LE1_Avg.x = Pts[4];
+    LE1_Avg.y = Pts[5];
+    
+    // point LE2
+    point2f LE2_Avg;
+    LE2_Avg.x = Pts[6];
+    LE2_Avg.y = Pts[7];
+    
+    // point RE1
+    point2f RE1_Avg;
+    RE1_Avg.x = Pts[8];
+    RE1_Avg.y = Pts[9];
+    
+    // point RE2
+    point2f RE2_Avg;
+    RE2_Avg.x = Pts[10];
+    RE2_Avg.y = Pts[11];
+    
+    // point LM1
+    point2f LM1_Avg;
+    LM1_Avg.x = Pts[12];
+    LM1_Avg.y = Pts[13];
+    
+    // point RM1
+    point2f RM1_Avg;
+    RM1_Avg.x = Pts[14];
+    RM1_Avg.y = Pts[15];
+    
+    // point N1
+    point2f N1_Avg;
+    N1_Avg.x = Pts[0];
+    N1_Avg.y = Pts[1];
+    
+    // point N2
+    point2f N2_Avg;
+    N2_Avg.x = Pts[2];
+    N2_Avg.y = Pts[3];
+    
+    faces.FacePts[0] = N1_Avg;
+    faces.FacePts[1] = N2_Avg;
+    faces.FacePts[2] = LE1_Avg;
+    faces.FacePts[3] = LE2_Avg;
+    faces.FacePts[4] = RE1_Avg;
+    faces.FacePts[5] = RE2_Avg;
+    faces.FacePts[6] = LM1_Avg;
+    faces.FacePts[7] = RM1_Avg;
+    
+    features.reserve(16);
+    for (int i=0; i < NUM_PTS; i++) {
+        float x, y;
+        x = faces.FacePts[i].x;
+        y = faces.FacePts[i].y;
+        features.push_back(x);
+        features.push_back(y);
+    }
+    return faces;
+}
+
 point2f Landmaker::TwoLevelLE1_1(cv::Mat img) {
     std::vector<float> features;
     //TwoLevel.Classify(img, features);
