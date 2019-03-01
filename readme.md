@@ -48,3 +48,30 @@ boost_system
 
 无版本数字代表版本无关
 
+## 打点及打角度代码
+    打点
+```
+for (int i = 0; i < 16; i+=2)
+{
+float x = features[i];
+float y = features[i + 1];
+cv::circle(img_rz,cv::Point(x,y), 2, cv::Scalar(0, 255, 0), -1);
+}
+
+```
+    打角度
+```
+#include <iostream>
+ostringstream outtext;
+// Print on image
+outtext << "Yaw: " << concat.at(0);
+cv::putText(img_rz, outtext.str(), cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 255, 0));
+
+```
+    写出
+```
+int count = 0;
+string filename = "./" + std::to_string(count) + ".jpg";
+cv::imwrite(filename, frame);
+count ++;
+```
