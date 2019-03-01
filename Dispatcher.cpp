@@ -49,11 +49,53 @@ void Dispatcher::GetBBox(cv::Mat img, cv::Rect& faceBox) {
     }
 }
 
+void Dispatcher::DetectWithoutAlignment(cv::Mat img, vector<float> &features) {
+    
+    // convert color space
+    cv::Mat image;
+    cv::cvtColor(img, image, CV_BGR2GRAY);
+
+    // get facebox
+    GetBBox(image, faceBox);
+
+    // detect with one layer
+    mLandmaker.DetectOneLayer(image, faceBox, features);
+
+    // calculate shape
+    for ( int i=0; i < features.size(); i+=2) {
+        float x = features[i];
+        float y = features[i+1];
+        features[i] =  x * Param[0] + y * Param[1] + Param[2];
+        features[i+1] = x * Param[3] + y * Param[4] + Param[5];
+    }
+    
+    float shape[16];
+    int j = 0;
+    for (int i=0; i < 16; i+=2) {
+        shape[j] = features[i];
+        shape[j + 8] = features[i+1];
+        j++;
+    }
+
+    // calculate angle from shape
+    cv::Mat L(1,16,CV_8UC1,shape);
+    cv::Vec3d eav = EstimatePose(L);
+    float pitch = eav[0];
+    float yaw = eav[1];
+    float roll = eav[2];
+
+    // push angle into result
+    features.push_back(pitch);
+    features.push_back(yaw);
+    features.push_back(roll);
+}
+
 void Dispatcher::Detect(cv::Mat img, vector<float> &features) {
     
     cv::Mat image, affineImg;
     
     cv::cvtColor(img, image, CV_BGR2GRAY);
+
     // TODO: 1st frame use opencv & 5p model
     if (reset_track)
     {
@@ -65,6 +107,7 @@ void Dispatcher::Detect(cv::Mat img, vector<float> &features) {
         // TODO: align & 8p model
         affineImg = CropImg(image);
         mDcnc.Detect(affineImg, faceBox, base_landmarks);
+
         // TODO:: inver
         invertAffineTransform(trans, trans_inv);
         std::vector<double> Param;
@@ -82,7 +125,7 @@ void Dispatcher::Detect(cv::Mat img, vector<float> &features) {
             base_landmarks[i] =  x * Param[0] + y * Param[1] + Param[2];
             base_landmarks[i+1] = x * Param[3] + y * Param[4] + Param[5];
         }
-        mLandmaker.DetectOneLayer(affineImg, faceBox, features);
+        mLandmaker.Detect(affineImg, faceBox, features);
         
         for ( int i=0; i < features.size(); i+=2) {
             float x = features[i];

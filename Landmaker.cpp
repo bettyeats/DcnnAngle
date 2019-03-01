@@ -305,6 +305,12 @@ FR_FaceInfo Landmaker::DetectOneLayer(const cv::Mat& image, cv::Rect bbox, std::
     std::vector<float> Pts;
     this->OneLevel_obj.Classify(croppedImg, Pts);
     
+    // convert relative pos to absolute
+    for (int i = 0; i < 8; ++i) {
+        Pts[i * 2] = Pts[i * 2] * bbox.width + bbox.x;
+        Pts[i * 2] = Pts[i * 2] * bbox.height + bbox.y;
+    }
+
     // point LE1
     point2f LE1_Avg;
     LE1_Avg.x = Pts[4];

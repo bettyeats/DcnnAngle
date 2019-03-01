@@ -33,6 +33,7 @@ public:
     void GetBBox(cv::Mat img, cv::Rect& faceBox);
     cv::Mat CropImg(cv::Mat img);
     void Detect(cv::Mat img, vector<float> &features);
+    void DetectWithoutAlignment(cv::Mat img, vector<float> &features);
     cv::Vec3d EstimatePose(cv::Mat &shape);
     float EstimateFaceWidth(cv::Vec3d rot, cv::Mat landmarks);
 };

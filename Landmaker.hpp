@@ -25,10 +25,6 @@ using std::string;
 #define CAFFE_MATC3 CV_64FC3
 #endif
 
-
-
-
-
 class Landmaker
 {
 public:
@@ -43,6 +39,7 @@ public:
     void Init();
     cv::Mat CropImageTest(cv::Mat img, point2f FacePts, float scale, cv::Rect & crop_rect);
     FR_FaceInfo Detect(const cv::Mat& image, cv::Rect bbox, std::vector<float> &features);
+    FR_FaceInfo DetectOneLayer(const cv::Mat& image, cv::Rect bbox, std::vector<float> &features);
     cv::Mat CropImage(cv::Mat img, point2f FacePts, float scale, cv::Rect & crop_rect);
     std::string getConfig(string level_id, const string data_path);
    
