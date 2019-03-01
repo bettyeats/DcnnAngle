@@ -308,7 +308,7 @@ FR_FaceInfo Landmaker::DetectOneLayer(const cv::Mat& image, cv::Rect bbox, std::
     // convert relative pos to absolute
     for (int i = 0; i < 8; ++i) {
         Pts[i * 2] = Pts[i * 2] * bbox.width + bbox.x;
-        Pts[i * 2] = Pts[i * 2] * bbox.height + bbox.y;
+        Pts[i * 2 + 1] = Pts[i * 2 + 1] * bbox.height + bbox.y;
     }
 
     // point LE1
