@@ -37,6 +37,28 @@ OneLevel_obj.Classify(croppedImg, Pts);
 
 使用的caffe官方c++调用库，可以不用管。
 
+## 实现
+
+需要提交以下两个文件：
+
+```sh
+AngleTest.hpp
+AngleTest.cpp
+```
+
+其中实现以下函数原型：
+
+```cpp
+void DetectAngle(const cv::Mat& image, std::vector<float> &angle);
+```
+
+参数介绍：
+
+```cpp
+const cv::Mat& image - 输入，CV读入的图片
+std::vector<float> &angle - 输出，表示角度的YPR三元组
+```
+
 ## 依赖
 
 依赖opencv2.4.13(core\calib3d\contrib\highgui\imgproc\video\videostab\objdetect)
@@ -48,9 +70,11 @@ boost_system
 
 无版本数字代表版本无关
 
-## 打点及打角度代码
-    打点
-```
+## 工具代码
+
+1. 打点
+
+```cpp
 for (int i = 0; i < 16; i+=2)
 {
 float x = features[i];
@@ -59,17 +83,18 @@ cv::circle(img_rz,cv::Point(x,y), 2, cv::Scalar(0, 255, 0), -1);
 }
 
 ```
-    打角度
-```
+2. 打角度
+```cpp
 #include <iostream>
 ostringstream outtext;
 // Print on image
 outtext << "Yaw: " << concat.at(0);
 cv::putText(img_rz, outtext.str(), cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 255, 0));
+```
 
-```
-    写出
-```
+3. 写出结果
+
+```cpp
 int count = 0;
 string filename = "./" + std::to_string(count) + ".jpg";
 cv::imwrite(filename, frame);
