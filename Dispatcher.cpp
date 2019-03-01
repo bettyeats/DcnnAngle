@@ -82,7 +82,7 @@ void Dispatcher::Detect(cv::Mat img, vector<float> &features) {
             base_landmarks[i] =  x * Param[0] + y * Param[1] + Param[2];
             base_landmarks[i+1] = x * Param[3] + y * Param[4] + Param[5];
         }
-        mLandmaker.Detect(affineImg, faceBox, features);
+        mLandmaker.DetectOneLayer(affineImg, faceBox, features);
         
         for ( int i=0; i < features.size(); i+=2) {
             float x = features[i];
